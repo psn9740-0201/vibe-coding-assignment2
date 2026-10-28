@@ -23,6 +23,9 @@ IT 뉴스(AI·반도체·클라우드·사이버보안·통신·플랫폼)와 �
 │   ├── analyzer.js          분야/부처 판별, 업계 영향 생성 (키워드 규칙)
 │   ├── aliasStore.js        별칭 DB를 읽어 표준명 찾기 (findEntities, canonicalize, getEntry)
 │   └── rssParser.js         RSS(XML) 파서
+├── api/                     ← Vercel 배포용 함수 (backend/server.js의 요청 처리 함수를 그대로 사용)
+│   ├── briefing.js          GET /api/briefing
+│   └── banner.js            GET /api/banner
 ├── frontend/                ← 프론트엔드 (브라우저)
 │   ├── index.html           화면 구조
 │   ├── style.css            디자인
@@ -36,6 +39,7 @@ IT 뉴스(AI·반도체·클라우드·사이버보안·통신·플랫폼)와 �
 ├── .env                     ← 실제 API 키 (직접 작성, GitHub에 올라가지 않음)
 ├── .env.example             ← 필요한 환경변수 이름 안내 (업로드용, 키 없음)
 ├── .gitignore               ← node_modules, .env, 로그, 빌드 결과물 등 업로드 제외
+├── vercel.json              ← Vercel 설정 (frontend 폴더를 화면으로 제공, 함수에 data 폴더 포함)
 ├── package.json
 ├── package-lock.json
 └── README.md
@@ -106,6 +110,16 @@ IT 뉴스(AI·반도체·클라우드·사이버보안·통신·플랫폼)와 �
 
 > 포트 3000이 이미 사용 중이면 `PORT=4000 npm start`로 실행하고 http://localhost:4000 에 접속하세요.
 > `frontend/index.html`을 더블클릭해서 바로 열면 API를 호출할 수 없으므로, 반드시 서버를 통해 접속하세요.
+
+## Vercel 배포
+
+1. Vercel에서 이 GitHub 저장소를 Import 합니다 (Framework Preset: Other, 빌드 명령 없음).
+   `vercel.json`이 `frontend/`를 화면 폴더로 지정하고, `api/briefing.js`·`api/banner.js`가 서버리스 함수로 실행됩니다.
+2. (선택) 배너 AI 분석을 쓰려면 Vercel 프로젝트의 **Settings → Environment Variables**에 `OPENAI_API_KEY`(필요하면 `OPENAI_MODEL`)를 추가하고 다시 배포합니다.
+   `.env`는 GitHub에 올라가지 않으므로 Vercel에는 이 방법으로만 키를 넣습니다. 키가 없으면 배너는 '자동 집계'로 표시됩니다.
+3. 서버리스 함수는 요청이 없으면 꺼졌다 다시 켜지므로 메모리 캐시(뉴스 10분, 배너 30분)가 유지되지 않을 수 있고, 그만큼 OpenAI 호출이 로컬보다 늘 수 있습니다.
+
+로컬 실행(`npm start`)은 Vercel 설정과 관계없이 그대로 동작합니다.
 
 ## 별칭 DB (`data/aliases.json`)
 

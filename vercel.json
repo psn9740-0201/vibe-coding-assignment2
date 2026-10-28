@@ -1,0 +1,9 @@
+{
+  "outputDirectory": "frontend",
+  "functions": {
+    "api/*.js": {
+      "includeFiles": "data/**",
+      "maxDuration": 60
+    }
+  }
+}

@@ -55,7 +55,8 @@ function serveStatic(req, res, pathname) {
   });
 }
 
-const server = http.createServer(async (req, res) => {
+// 요청 처리 함수: 로컬 서버와 Vercel 함수(api/*.js)가 함께 사용한다
+async function handler(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
 
   if (url.pathname === '/api/briefing' || url.pathname === '/api/banner') {
@@ -72,12 +73,17 @@ const server = http.createServer(async (req, res) => {
   }
 
   serveStatic(req, res, decodeURIComponent(url.pathname));
-});
+}
 
-server.listen(PORT, () => {
-  console.log(`✅ 서버 실행 중: http://localhost:${PORT}`);
-  console.log(process.env.OPENAI_API_KEY
-    ? `   배너 AI 분석: 켜짐 (모델 ${process.env.OPENAI_MODEL || 'gpt-4o-mini'})`
-    : '   배너 AI 분석: 꺼짐 (.env 에 OPENAI_API_KEY 를 넣으면 켜집니다)');
-  console.log('   종료하려면 Ctrl + C 를 누르세요.');
-});
+module.exports = handler;
+
+// `node backend/server.js`로 직접 실행할 때만 서버를 띄운다 (Vercel에서는 api/*.js가 handler만 가져다 쓴다)
+if (require.main === module) {
+  http.createServer(handler).listen(PORT, () => {
+    console.log(`✅ 서버 실행 중: http://localhost:${PORT}`);
+    console.log(process.env.OPENAI_API_KEY
+      ? `   배너 AI 분석: 켜짐 (모델 ${process.env.OPENAI_MODEL || 'gpt-4o-mini'})`
+      : '   배너 AI 분석: 꺼짐 (.env 에 OPENAI_API_KEY 를 넣으면 켜집니다)');
+    console.log('   종료하려면 Ctrl + C 를 누르세요.');
+  });
+}
