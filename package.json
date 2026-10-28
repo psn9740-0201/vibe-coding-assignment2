@@ -1,0 +1,17 @@
+{
+  "name": "it-policy-briefing",
+  "version": "1.0.0",
+  "description": "IT 뉴스와 정부 정책 변경, 오늘의 IT 업계 브리핑을 보여주는 간단한 웹페이지",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "node --test tests/"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "openai": "^7.43.0"
+  }
+}

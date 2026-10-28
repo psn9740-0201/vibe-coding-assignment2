@@ -1,0 +1,25 @@
+# 의존성
+node_modules/
+
+# 환경변수 파일 (API 키 등 비밀 정보) — 업로드 금지
+.env
+.env.*
+*.env
+# 단, 변수 이름만 안내하는 예시 파일은 업로드한다
+!.env.example
+
+# 로그
+logs/
+*.log
+npm-debug.log*
+
+# 빌드 결과물 · 테스트 커버리지 · 임시 파일
+dist/
+build/
+coverage/
+*.tmp
+
+# OS / 편집기
+.DS_Store
+.vscode/
+.idea/
